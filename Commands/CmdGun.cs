@@ -87,17 +87,18 @@ namespace MCForge.Commands
                             double a = Math.Sin(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
                             double b = Math.Cos(((double)(128 - p.rot[0]) / 256) * 2 * Math.PI);
                             double c = Math.Cos(((double)(p.rot[1] + 64) / 256) * 2 * Math.PI);
-
+                            double d = Math.Cos(((double)(p.rot[1]) / 256) * 2 * Math.PI);
+        
                             try
                             {
-                                ushort x = (ushort)(p.pos[0] / 32);
-                                x = (ushort)Math.Round(x + (double)(a * 3));
-
-                                ushort y = (ushort)(p.pos[1] / 32 + 1);
-                                y = (ushort)Math.Round(y + (double)(c * 3));
-
-                                ushort z = (ushort)(p.pos[2] / 32);
-                                z = (ushort)Math.Round(z + (double)(b * 3));
+                                double x0 = (double)(p.pos[0] / 32);
+                                ushort x = (ushort)Math.Round(x0 + (double)(a * 3 * d));
+        
+                                double y0 = (double)(p.pos[1] / 32 + 1);
+                                ushort y = (ushort)Math.Round(y0 + (double)(c * 3));
+        
+                                double z0 = (double)(p.pos[2] / 32);
+                                ushort z = (ushort)Math.Round(z0 + (double)(b * 3 * d));
 
                                 if (x > p.level.width || y > p.level.depth || z > p.level.height) throw new Exception();
                                 if (x < 0 || y < 0 || z < 0) throw new Exception();
@@ -178,19 +179,19 @@ namespace MCForge.Commands
 
             Thread gunThread = new Thread(new ThreadStart(delegate
             {
-                ushort startX = (ushort)(p.pos[0] / 32);
-                ushort startY = (ushort)(p.pos[1] / 32);
-                ushort startZ = (ushort)(p.pos[2] / 32);
+                double startX = (double)(p.pos[0] / 32);
+                double startY = (double)(p.pos[1] / 32);
+                double startZ = (double)(p.pos[2] / 32);
 
-                pos.x = (ushort)Math.Round(startX + (double)(a * 3));
+                pos.x = (ushort)Math.Round(startX + (double)(a * 3 * d));
                 pos.y = (ushort)Math.Round(startY + (double)(c * 3));
-                pos.z = (ushort)Math.Round(startZ + (double)(b * 3));
+                pos.z = (ushort)Math.Round(startZ + (double)(b * 3 * d));
 
                 for (double t = 4; bigDiag > t; t++)
                 {
-                    pos.x = (ushort)Math.Round(startX + (double)(a * t));
+                    pos.x = (ushort)Math.Round(startX + (double)(a * t * d));
                     pos.y = (ushort)Math.Round(startY + (double)(c * t));
-                    pos.z = (ushort)Math.Round(startZ + (double)(b * t));
+                    pos.z = (ushort)Math.Round(startZ + (double)(b * t * d));
 
                     by = p.level.GetTile(pos.x, pos.y, pos.z);
 
